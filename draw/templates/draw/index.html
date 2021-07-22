@@ -28,8 +28,11 @@
     var uid = Date.now() % 10000;
 
     // add your favorite colors below
-    var stroke_colors = ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#343a40'];
-    path.strokeColor = stroke_colors[uid % stroke_colors.length];
+    // the more colors added, the less likely it is for two users to get the same stroke color
+    const stroke_colors = ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#343a40'];
+
+    // construct a map for uid ~ its path
+    var paths = new Map();
 
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
@@ -47,8 +50,17 @@
         var received = JSON.parse(receivedMessage.data);
         console.log("Received: " + JSON.stringify(received));
 
-        path.add(received);
         // You will probably want to add some code here to draw more lines.
+        let u = received.uid;
+
+        if (!paths.has(u)) {
+            paths.set(u, new paper.Path());
+        }
+
+        let path = paths.get(u);
+        path.strokeColor = stroke_colors[received.uid % stroke_colors.length];
+        path.add(new paper.Point(received.x, received.y));
+
     }
 
     socket.onclose = function(e) {
