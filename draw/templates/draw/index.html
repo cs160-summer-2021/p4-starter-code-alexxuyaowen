@@ -16,7 +16,7 @@
 </head>
 <body>
     <!-- You may change the dimensions of this canvas -->
-    <canvas id="myCanvas" width="750px" height="750px"></canvas>
+    <canvas id="myCanvas" width="1500px" height="750px"></canvas>
 </body>
 <script>
 
@@ -26,7 +26,10 @@
     var tool = new paper.Tool();
     var path = new paper.Path();
     var uid = Date.now() % 10000;
-    path.strokeColor = "red";
+
+    // add your favorite colors below
+    var stroke_colors = ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#343a40'];
+    path.strokeColor = stroke_colors[uid % stroke_colors.length];
 
     // getting the URL (you may want to use for Exercise 3)
     var url = window.location.href;
@@ -43,6 +46,8 @@
     socket.onmessage = function(receivedMessage) {
         var received = JSON.parse(receivedMessage.data);
         console.log("Received: " + JSON.stringify(received));
+
+        path.add(received);
         // You will probably want to add some code here to draw more lines.
     }
 
