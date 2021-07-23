@@ -29,8 +29,9 @@
 
     // add your favorite colors below
     // the more colors added, the less likely it is for two users to get the same stroke color
-    const stroke_colors = ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#343a40', '#007bff', '#6610f2',
-                            '#6f42c1', '#e83e8c', '#fd7e14', '#ffc107', '#28a745', '#20c997', '#6c757d'];
+    // All the colors added below are from Bootstrap.
+    const stroke_colors = ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#343a40', '#007bff',
+                            '#6610f2', '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6c757d'];
     path.strokeColor = stroke_colors[uid % stroke_colors.length];
 
     // construct a map for uid ~ its path
