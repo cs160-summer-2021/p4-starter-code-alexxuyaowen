@@ -27,8 +27,8 @@
     var path = new paper.Path();
     var uid = Date.now() % 10000;
 
-    // add your favorite colors below
-    // the more colors added, the less likely it is for two users to get the same stroke color
+    // Add your favorite colors below
+    // The more colors added, the less likely it is for two users to get the same stroke color
     // All the colors added below are from Bootstrap.
     const stroke_colors = ['#dc3545', '#ffc107', '#28a745', '#17a2b8', '#343a40', '#007bff',
                             '#6610f2', '#6f42c1', '#e83e8c', '#fd7e14', '#20c997', '#6c757d'];
@@ -55,7 +55,9 @@
 
         // You will probably want to add some code here to draw more lines.
         let u = received.uid;
-        if (window.location.search == "?size=large") {
+
+        // with this logic, size is default handled as large
+        if (window.location.search != "?size=small") {
           if (!paths.has(u)) {
               paths.set(u, new paper.Path());
           }
