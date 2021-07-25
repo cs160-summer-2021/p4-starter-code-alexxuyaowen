@@ -1,0 +1,138 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html style="padding:10px;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>GameXier</title>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'draw/vendor/bootstrap/css/bootstrap.min.css' %}">
+    <script type="text/javascript" src="{% static 'draw/vendor/jquery/jquery-3.3.1.min.js' %}"></script>
+
+</head>
+
+<!-- https://codepen.io/matt-west/pen/tHlBb  -->
+<style>
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.95rem;
+  }
+
+  ul li {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #EEE;
+  }
+
+  ul li:first-child {
+    border-top: 1px solid #EEE;
+  }
+
+  ul li span {
+    display: inline-block;
+    width: 90px;
+    font-weight: bold;
+    color: #999;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  #message-form {
+    margin-top: 1.5rem;
+  }
+
+  textarea {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #D9D9D9;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.1);
+    min-height: 100px;
+    margin-bottom: 1rem;
+  }
+</style>
+
+<!-- https://codepen.io/matt-west/pen/tHlBb -->
+<body class="bg-info">
+  <h1 class="text-center" style="padding:5vh">GameXier</h1>
+  <h4>Choose a game:</h4>
+  <div class="form-group">
+    <select class="form-control">
+      <option value=0>League of Legends</option>
+      <option value=1>World of Tanks</option>
+      <option value=2>Dota II</option>
+      <option value=3>More...</option>
+    </select>
+  </div>
+
+  <ul id="messages"></ul>
+
+  <form id="message-form" action="#" method="post">
+    <textarea id="message" placeholder="Start Typing here..." rows="6"required></textarea>
+    <button id="norm" type="submit" class="btn btn-primary mt-2">Post</button>
+    <button id="anon" type="submit" class="btn btn-dark mt-2">Post Anonymously</button>
+    <!-- <a href="{% url 'platform' %}"><button type="button" class="btn btn-secondary mt-2">Home</button></a> -->
+  </form>
+
+</body>
+
+<!-- https://codepen.io/matt-west/pen/tHlBb -->
+<script>
+  window.onload = function() {
+    var uid = String(window.location.search);
+
+    if (uid == '') {
+      $("h4").hide();
+      $("div").hide();
+      $("form").hide();
+    }
+
+    $("#norm").click(function(){
+      uid = String(window.location.search);
+    });
+
+    $("#anon").click(function(){
+      uid = "?#" + Date.now() % 9999;
+    });
+
+    var form = document.getElementById('message-form');
+    var messageField = document.getElementById('message');
+    var messagesList = document.getElementById('messages');
+
+    var socket = new WebSocket('ws://' + window.location.host + '/ws/draw');
+
+    form.onsubmit = function(e) {
+      e.preventDefault();
+
+      uid = uid.slice(1);
+
+      var message = '<li style="background-color:#28a745">' + uid + ': ' + messageField.value + '</li>';
+
+      if (uid[0] == '#') {
+        message = '<li style="background-color:gray">' + uid + ': ' + messageField.value + '</li>';
+      } else if (uid == "Xier") {
+        message = '<li style="background-color:#ffc107">' + uid + ': ' + messageField.value + '</li>';
+      }
+
+      socket.send(message);
+      messageField.value = '';
+
+      return false;
+    };
+
+    socket.onmessage = function(event) {
+      var message = event.data;
+      if (window.location.search == '') {
+        messagesList.innerHTML += message;
+      }
+    };
+  };
+
+
+
+</script>
+</html>
